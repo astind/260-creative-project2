@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #c2c2c2;
+}
+
+/* Style the side navigation */
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #5dc21e;
+    overflow-x: hidden;
+    border-right: 3px solid;
+}
+
+/* Side navigation links */
+.sidenav a {
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color on hover */
+.sidenav a:hover {
+    background-color: #6b6b6b;
+    color: #f1f1f1;
+}
+
+/* Style the content */
+.content {
+    margin-left: 200px;
+    padding-left: 20px;
+    text-align: center;
+    background-color: #c2c2c2;
+}
+
+.profContent {
+    margin-left: 200px;
+    padding-left: 20px;
+    padding-top: 10px;
+    text-align: center;
+    background-color: #c2c2c2;
+}
+
+.friContent {
+    margin-left: 200px;
+    padding-left: 20px;
+    background-color: #c2c2c2;
+}
+
+.friContent img {
+    float: left;
+    padding-right: 20px;
+    margin-bottom: 10px;
+    width: 160px;
+}
+
+.friContent h3 {
+    float: left;
+    padding-top: 40px;
+}
+.achContent {
+    margin-left: 200px;
+    padding-left: 20px;
+    background-color: #c2c2c2;
+}
+
+.clipContent {
+    margin-left: 200px;
+    padding-left: 20px;
+    background-color: #c2c2c2;
+    text-align : center;
+}
+
+.clipContent h1 {
+   text-align: left;
+}
+
+.head {
+   padding-left: 20px;
+   margin-left : 200px;
+   text-align: center;
+   background-color: #6b6b6b;
+   padding-bottom: 1px;
+}
+
+.clearFix {
+   clear: both;
+}
+

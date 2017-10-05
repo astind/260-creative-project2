@@ -1,0 +1,192 @@
+<html>
+<head>
+<title> Xbox Dashboard </title>
+<link rel="stylesheet" type="text/css" href="style_dashboard.css">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+$(document).ready(function() {
+  var xboxid = "75ad63e373bea7b73d4896f08c6cefd61fbd87fa";
+  var userUid = "2533274825588702";
+  console.log(xboxid);
+  $("#idButton").click(function(e) {
+    xboxid = $("#idInput").val();
+    console.log(xboxid);
+    e.preventDefault();
+    getUidUrl = "https://xboxapi.com/v2/profile"
+    $.ajax({
+	url : getUidUrl,
+	headers : {
+	   'X-AUTH' : xboxid
+	},
+	dataType : "json",
+	success : function(data) {
+	   console.log(data);
+	   userUid = data['userXuid'];
+	   console.log(userUid);
+	}
+    });
+  });
+
+  $("#profile").click(function() {
+    $("#homeContent").hide();
+    $("#friendsContent").hide();
+    $("#achievementsContent").hide();
+    $("#gameClipsContent").hide();
+    $("#profileContent").show();
+    console.log("profile selected");
+    var display = "";
+    profileUrl = "https://xboxapi.com/v2/"+userUid+"/gamercard";
+    $.ajax({
+	url : profileUrl,
+	headers: {
+	    'X-AUTH' : xboxid
+	},
+	dataType : "json",
+	success : function(data) {
+	  console.log(data);
+	  var firstName = data['name'];
+	  var gamerscore = data['gamerscore'];
+	  var gamerTag = data['gamertag'];
+	  var imgUrl = data['gamerpicLargeImagePath'];
+	  display += '<img src="'+imgUrl+'" width="80px">';
+	  display += "<h2>GamerTag: "+gamerTag+"</h2>";
+	  display += "<h3>Name: "+firstName+"</h3>";
+	  display += "<h3>Gamerscore: "+gamerscore+"</h3>";
+    	  $("#profileContent").html(display);
+	}
+    });
+  }); 
+
+  $("#home").click(function() {
+    console.log("home selected");
+    $("#friendsContent").hide();
+    $("#profileContent").hide();
+    $("#achievementsContent").hide();
+    $("#gameClipsContent").hide();
+    $("#homeContent").show();
+  });
+
+  $("#friends").click(function() {
+    $("#homeContent").hide();
+    $("#profileContent").hide();
+    $("#achievementsContent").hide();
+    $("#gameClipsContent").hide();
+    $("#friendsContent").show();
+    console.log("friends selected");
+    var display = '<h1>Friends: </h1>';
+    profileUrl = "https://xboxapi.com/v2/"+userUid+"/friends";
+    $.ajax({
+        url : profileUrl,
+        headers: {
+            'X-AUTH' : xboxid
+        },
+        dataType : "json",
+        success : function(data) {
+          console.log(data);
+          $.each(data, function(index, element) {
+            var item = '<img src="'+element.GameDisplayPicRaw+'">';
+		item += "<h3>"+element.Gamertag+'</h3><div class="clearFix"></div>';
+	    console.log(item);
+            display += item;
+          });
+          $("#friendsContent").html(display);
+        }
+    });
+ 
+  });
+
+  $("#achievements").click(function() {
+    $("#profileContent").hide();
+    $("#friendsContent").hide();
+    $("#homeContent").hide();
+    $("#gameClipsContent").hide();
+    $("#achievementsContent").show();
+
+    console.log("achievements selected");
+    var display = "<h1>Achievements: </h1>";
+     profileUrl = "https://xboxapi.com/v2/"+userUid+"/xboxonegames";
+    $.ajax({
+        url : profileUrl,
+        headers: {
+            'X-AUTH' : xboxid
+        },
+        dataType : "json",
+        success : function(data) {
+          console.log(data);
+	  $.each(data.titles, function(index, element) {
+	    var item = "<h2>"+element.name+"</h2>";
+	    item += "<ul>";
+	    item += "<li> Earned Achievements : "+element.earnedAchievements+"</li>"; 
+	    item += "<li> Gamerscore : "+element.currentGamerscore+"</li>";
+	    item += "<li> Max Gamerscore : "+element.maxGamerscore+"</li>";
+	    item += "</ul>";
+	    display += item;
+	  });
+          $("#achievementsContent").html(display);
+        }
+    });
+  });
+  
+  $("#gameclips").click(function() {
+    $("#profileContent").hide();
+    $("#friendsContent").hide();
+    $("#achievementsContent").hide();
+    $("#homeContent").hide();
+    $("#gameClipsContent").show();
+
+    console.log("gameclips selected");
+    var display = "<h1>Game Clips:</h1>";
+     profileUrl = "https://xboxapi.com/v2/"+userUid+"/game-clips";
+    $.ajax({
+        url : profileUrl,
+        headers: {
+            'X-AUTH' : xboxid
+        },
+        dataType : "json",
+        success : function(data) {
+          console.log(data);
+          $.each(data.slice(0,6), function(index, element) {
+            var item = "<h2>"+element.titleName+"</h2>";
+	    var clip = element.gameClipUris[0].uri;
+	    item += '<video src="'+clip+'" controls>gameclip</video><br>';
+	    console.log(item);
+            display += item;
+          });
+          $("#gameClipsContent").html(display);
+        }
+    });
+  });  
+
+});
+</script>
+</head>
+<body>
+
+<div class="sidenav">
+  <a href="#" id="home">Home</a>
+  <a href="#" id="profile">Profile</a>
+  <a href="#" id="friends">Friends</a>
+  <a href="#" id="achievements">Achievements</a>
+  <a href="#" id="gameclips">Game Clips</a>
+</div>
+
+<div class="head" id="header">
+<h1> Welcome to the Xbox Live Dashboard Display </h1>
+<p> Please be patient, the API takes a bit to load </p>
+</div>
+<div class="content" id="homeContent">
+  <h2>Enter your own XboxAPI ID or select a link on the side to skip this and use mine</h2>
+  <input type="text" id="idInput" value=""><br>
+  <input id="idButton" type="submit" value="Set ID">
+  <p>After submitting your XboxAPI ID select a link to view different parts of your account</p>
+</div>
+<div class="profContent" id="profileContent">
+</div>
+<div class="friContent" id="friendsContent">
+</div>
+<div class="achContent" id="achievementsContent">
+</div>
+<div class="clipContent" id="gameClipsContent">
+</div>
+</body>
+</html>
